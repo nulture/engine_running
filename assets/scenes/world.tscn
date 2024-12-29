@@ -1,7 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://dpwlfd527tik1"]
+[gd_scene load_steps=7 format=3 uid="uid://dpwlfd527tik1"]
 
 [ext_resource type="Script" path="res://assets/scripts/player_camera.gd" id="1_niy1a"]
 [ext_resource type="Script" path="res://assets/scripts/player_pawn.gd" id="1_ulyja"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_embke"]
+size = Vector2(20, 78)
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_vvqjh"]
 b = Vector2(1000, 0)
@@ -9,7 +12,25 @@ b = Vector2(1000, 0)
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6hvso"]
 height = 40.0
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8nr52"]
+size = Vector2(20, 40)
+
 [node name="world" type="Node2D"]
+
+[node name="ladder" type="Area2D" parent="."]
+position = Vector2(34, 0)
+rotation = 0.285443
+collision_layer = 2
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ladder"]
+shape = SubResource("RectangleShape2D_embke")
+
+[node name="Polygon2D" type="Polygon2D" parent="ladder"]
+position = Vector2(-10, -40)
+color = Color(0, 0.5, 0.25, 1)
+polygon = PackedVector2Array(0, 1, 0, 79, 20, 79, 20, 1)
 
 [node name="platform" type="AnimatableBody2D" parent="."]
 position = Vector2(-43, 39)
@@ -36,3 +57,14 @@ polygon = PackedVector2Array(0, -20, 7, -18, 10, -11, 10, 0, 10, 11, 7, 18, 0, 2
 [node name="Camera2D" type="Camera2D" parent="CharacterBody2D"]
 zoom = Vector2(4, 4)
 script = ExtResource("1_niy1a")
+
+[node name="ladder_sensor" type="Area2D" parent="CharacterBody2D"]
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D/ladder_sensor"]
+shape = SubResource("RectangleShape2D_8nr52")
+
+[connection signal="area_entered" from="CharacterBody2D/ladder_sensor" to="CharacterBody2D" method="_on_ladder_sensor_area_entered"]
+[connection signal="area_exited" from="CharacterBody2D/ladder_sensor" to="CharacterBody2D" method="_on_ladder_sensor_area_exited"]
